@@ -1,0 +1,117 @@
+# Values for the parent chart, passed to subcharts
+
+letsencrypt:
+  contactEmail: erik.i.sundell@gmail.com
+
+# Default values: https://github.com/jupyterhub/zero-to-jupyterhub-k8s/blob/master/jupyterhub/values.yaml
+jupyterhub:
+  auth:
+    admin:
+      access: false
+
+  ingress:
+    enabled: true
+    annotations:
+      kubernetes.io/tls-acme: "true"
+      kubernetes.io/ingress.class: nginx
+    hosts:
+      - jupyter.se
+    tls:
+      - secretName: jupyter-se-tls
+        hosts:
+          - jupyter.se
+
+  prePuller:
+    hook:
+      enabled: true
+    continuous:
+      enabled: true
+
+  scheduling:
+    podPriority:
+      enabled: true
+    userScheduler:
+      enabled: true
+    userPlaceholder:
+      enabled: true
+      replicas: 1
+    userPods:
+      nodeAffinity:
+        matchNodePurpose: require
+    corePods:
+      nodeAffinity:
+        matchNodePurpose: require
+
+  hub:
+    extraConfig:
+      startup: |-
+        c.Spawner.cmd = ['jupyter-labhub']
+    resources:
+      requests:
+        cpu: 10m
+        memory: 256Mi
+
+  proxy:
+    service:
+      type: ClusterIP
+    https:
+      enabled: false
+    chp:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 256Mi
+
+  singleuser:
+    extraEnv:
+      EDITOR: vim
+      NBGITPULLER_APP: lab
+    storage:
+      capacity: 2Gi
+    memory:
+      limit: 2G
+      guarantee: 0.5G
+    cpu:
+      limit: 7
+      guarantee: 0.05
+    defaultUrl: "/lab"
+    image:
+      # Get the latest image tag at:
+      # https://hub.docker.com/r/jupyter/datascience-notebook/tags/
+      # Inspect the Dockerfile at:
+      # https://github.com/jupyter/docker-stacks/tree/master/datascience-notebook/Dockerfile
+      name: consideratio/datascience-notebook-enhanced
+      tag: v0.1.1
+      # extraConfig: profile_list etc...
+      lifecycleHooks:
+        postStart:
+          exec:
+            command:
+              - bash
+              - -c
+              # TODO: Curl the README instead ofc!
+              - git clone https://github.com/consideratio/getting-started /tmp/getting-started;
+                cp /tmp/getting-started/README.ipynb README.ipynb
+
+  cull:
+    enabled: true
+    timeout: 1800 # 30 in seconds
+    maxAge: 0
+
+# Default values: https://github.com/helm/charts/blob/master/stable/nginx-ingress/values.yaml
+nginx-ingress:
+  controller:
+    service:
+      # I reserved an regional ip address in us-east1...
+      # > gcloud compute addresses create jupyter-se-ingress --region eurpe-west4
+      # ... and inspected what address got ...
+      # > gcloud compute addresses list
+      # ... and assigned the IP to the field below
+      loadBalancerIP: 35.204.251.69
+
+# Default values: https://github.com/helm/charts/blob/master/stable/cert-manager/values.yaml
+cert-manager:
+  ingressShim:
+    defaultIssuerName: "jupyter-se"
+    defaultIssuerKind: "ClusterIssuer"
+    defaultACMEChallengeType: "http01"

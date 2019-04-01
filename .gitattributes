@@ -1,0 +1,11 @@
+# NOTE: The syntax deviates from the .gitignore syntax, see this note for more info:
+#       https://github.com/AGWA/git-crypt#gitattributes-file
+
+# Encrypt / Decrypt anything including "secret" in the filename
+**secret** filter=git-crypt diff=git-crypt
+# Encrypt all files _directly under_ a folder with "secret" in its name.
+# WARNING:
+# - my-secret-folder/a.txt                  would be encrypted
+# - my-secret-folder/another-folder/b.txt   would not be encrypted
+**/*secret*/* filter=git-crypt diff=git-crypt
+*secret*/* filter=git-crypt diff=git-crypt

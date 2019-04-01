@@ -1,0 +1,9 @@
+apiVersion: v1
+name: jupyter.se-deploy
+version: 0.1.0
+description: A chart composing the charts required for the jupyter.se deployment.
+sources:
+  - https://github.com/consideratio/jupyter.se-deploy
+maintainers:
+  - name: consideRatio
+    email: erik.i.sundell@gmail.com
