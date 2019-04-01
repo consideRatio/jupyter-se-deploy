@@ -2,13 +2,13 @@
 set -eu # exit on error or unset variable
 
 # Cluster details
-REGION=europe-west4-a
+REGION=europe-north1-a
 CLUSTER=jupyter-se
 PROJECT=jupyter-se
 
 # Helm details
-NAMESPACE=jh
-RELEASE=jh
+NAMESPACE=jhub
+RELEASE=jhub
 CHART_LOCAL_PATH="."
 TIMEOUT=900
 
@@ -18,8 +18,10 @@ gcloud config set container/cluster $CLUSTER
 gcloud config set core/project $PROJECT
 
 helm repo add jupyterhub https://jupyterhub.github.io/helm-chart
+helm repo add jetstack https://charts.jetstack.io
 helm dependency update .
 helm upgrade $RELEASE --install $CHART_LOCAL_PATH \
+  --force \
   --namespace $NAMESPACE \
   --values secrets/values.yaml \
   --values values.yaml \

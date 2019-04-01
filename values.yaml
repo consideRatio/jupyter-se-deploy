@@ -23,7 +23,7 @@ jupyterhub:
 
   prePuller:
     hook:
-      enabled: true
+      enabled: false
     continuous:
       enabled: true
 
@@ -83,15 +83,13 @@ jupyterhub:
       name: consideratio/datascience-notebook-enhanced
       tag: v0.1.1
       # extraConfig: profile_list etc...
-      lifecycleHooks:
-        postStart:
-          exec:
-            command:
-              - bash
-              - -c
-              # TODO: Curl the README instead ofc!
-              - git clone https://github.com/consideratio/getting-started /tmp/getting-started;
-                cp /tmp/getting-started/README.ipynb README.ipynb
+    lifecycleHooks:
+      postStart:
+        exec:
+          command:
+            - bash
+            - -c
+            - wget -O /home/jovyan/README.ipynb https://raw.githubusercontent.com/consideRatio/jupyter-se-deploy/master/onboarding/README.ipynb
 
   cull:
     enabled: true
@@ -107,7 +105,7 @@ nginx-ingress:
       # ... and inspected what address got ...
       # > gcloud compute addresses list
       # ... and assigned the IP to the field below
-      loadBalancerIP: 35.204.251.69
+      loadBalancerIP: 35.228.67.238
 
 # Default values: https://github.com/helm/charts/blob/master/stable/cert-manager/values.yaml
 cert-manager:

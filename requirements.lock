@@ -1,12 +1,12 @@
 dependencies:
+- name: cert-manager
+  repository: https://charts.jetstack.io
+  version: v0.7.0
 - name: nginx-ingress
   repository: https://kubernetes-charts.storage.googleapis.com
   version: 1.4.0
-- name: cert-manager
-  repository: https://kubernetes-charts.storage.googleapis.com
-  version: v0.6.6
 - name: jupyterhub
   repository: https://jupyterhub.github.io/helm-chart
   version: 0.9-8ed2f81
-digest: sha256:e7dc4932233ca3b389589d63a934fabfb68fba78621ab7d53448de7b026e9cc2
-generated: 2019-03-31T22:32:51.907128604+02:00
+digest: sha256:ccf368ce25e24f89be558b6beeb40da9b057f2664b3f98222bcfaa2eca8d9fa2
+generated: 2019-04-02T00:16:49.486672219+02:00
