@@ -12,5 +12,5 @@ dependencies:
   # https://github.com/jupyterhub/zero-to-jupyterhub-k8s
   # https://jupyterhub.github.io/helm-chart/
   - name: jupyterhub
-    version: "0.9-8ed2f81"
+    version: "0.9-61cf357"
     repository: "https://jupyterhub.github.io/helm-chart"

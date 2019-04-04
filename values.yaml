@@ -81,7 +81,7 @@ jupyterhub:
       # Inspect the Dockerfile at:
       # https://github.com/jupyter/docker-stacks/tree/master/datascience-notebook/Dockerfile
       name: consideratio/datascience-notebook-enhanced
-      tag: v0.1.1
+      tag: v0.1.2
       # extraConfig: profile_list etc...
     lifecycleHooks:
       postStart:
@@ -93,12 +93,18 @@ jupyterhub:
 
   cull:
     enabled: true
-    timeout: 1800 # 30 in seconds
+    timeout: 7200 # 2h in seconds
     maxAge: 0
 
 # Default values: https://github.com/helm/charts/blob/master/stable/nginx-ingress/values.yaml
 nginx-ingress:
   controller:
+    config:
+      # Allow POSTs of upto 64MB, to support saving large notebooks.
+      proxy-body-size: 64m
+    scope:
+      # support cluster wide ingress: part 1/2
+      enabled: false
     service:
       # I reserved an regional ip address in us-east1...
       # > gcloud compute addresses create jupyter-se-ingress --region eurpe-west4
@@ -106,6 +112,9 @@ nginx-ingress:
       # > gcloud compute addresses list
       # ... and assigned the IP to the field below
       loadBalancerIP: 35.228.67.238
+  rbac:
+    # support cluster wide ingress: part 2/2
+    createClusterRole: true
 
 # Default values: https://github.com/helm/charts/blob/master/stable/cert-manager/values.yaml
 cert-manager:
